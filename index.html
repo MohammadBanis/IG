@@ -3,49 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stable Diffusion 3.5 Image Generator</title>
+    <title>MohammadBanis AI Image Generator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            animation: slideDown 0.5s ease-out;
         }
 
         input[type="text"] {
             width: 80%;
-            padding: 10px;
+            max-width: 600px;
+            padding: 15px;
             margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            transform: scale(1.05);
+            border-color: #007bff;
         }
 
         button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
+            padding: 15px 30px;
+            background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 1rem;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        #output {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        .loading {
+            font-size: 1rem;
+            color: #555;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            animation-delay: 0.5s;
         }
 
         img {
             margin-top: 20px;
             max-width: 100%;
             height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            animation-delay: 1s;
         }
 
-        .loading {
-            font-size: 18px;
-            color: #666;
+        @media (max-width: 600px) {
+            input[type="text"], button {
+                width: 90%;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Stable Diffusion 3.5 Image Generator</h1>
+    <h1>Stable Diffusion Image Generator</h1>
     <input type="text" id="prompt" placeholder="Enter your prompt here...">
     <button onclick="generateImage()">Generate Image</button>
     <div id="output">
@@ -66,6 +137,7 @@
 
             loading.style.display = 'block';
             result.style.display = 'none';
+            result.style.opacity = 0;
 
             try {
                 const response = await fetch('https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large', {
@@ -86,6 +158,7 @@
 
                 result.src = imageUrl;
                 result.style.display = 'block';
+                result.style.opacity = 1;
             } catch (error) {
                 alert(`Failed to generate image: ${error.message}`);
             } finally {
